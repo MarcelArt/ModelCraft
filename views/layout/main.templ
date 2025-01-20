@@ -1,0 +1,22 @@
+package layout
+
+templ Main() {
+    <html>
+        <head>
+            <title>ModelCraft</title>
+            <script src="/scripts/tailwind.js"></script>
+            <script src="/scripts/htmx.min.js"></script>
+            <script src="/scripts/response-targets.js"></script>
+        </head>
+        <body class="bg-gray-100">
+            <div class="bg-blue-500 p-4">
+                <h1 class="text-white text-2xl">ModelCraft</h1>
+            </div>
+            <div class="container mx-auto mt-4">
+                { children... }
+            </div>
+            <div class="fixed bottom-0 right-0 m-4 w-2/12 self-start rounded p-2" id="toast"></div>
+            <div id="create-modal"></div>
+        </body>
+    </html>
+}

@@ -1,0 +1,41 @@
+package components
+
+import "fmt"
+
+templ ModelBuilderForm(i int) {
+    {{
+        column := fmt.Sprintf("model.column[%d]", i)
+        json := fmt.Sprintf("model.json[%d]", i)
+        gorm := fmt.Sprintf("model.gorm[%d]", i)
+        validate := fmt.Sprintf("model.validate[%d]", i)
+        currentField := fmt.Sprintf("current-field-%d", i)
+        currentTarget := fmt.Sprintf("#current-field-%d", i)
+        nextField := fmt.Sprintf("next-field-%d", i+1)
+        nextTarget := fmt.Sprintf("#next-field-%d", i+1)
+        nextRoute := fmt.Sprintf("/dev-tools/create/add/%d", i+1)
+    }}
+    <div id={currentField}>
+        <div class="flex flex-row space-x-1">
+            <div class="mb-4">
+                <label for={column} class="block text-sm font-medium text-gray-700">Column</label>
+                <input type="text" id={column} name={column} value="" class="mt-1 block w-full shadow-sm sm:text-sm border-black rounded-md border-2 p-1">
+            </div>
+            <div class="mb-4">
+                <label for={json} class="block text-sm font-medium text-gray-700">JSON</label>
+                <input type="text" id={json} name={json} value="" class="mt-1 block w-full shadow-sm sm:text-sm border-black rounded-md border-2 p-1">
+            </div>
+            <div class="mb-4">
+                <label for={gorm} class="block text-sm font-medium text-gray-700">Gorm</label>
+                <input type="text" id={gorm} name={gorm} value="" class="mt-1 block w-full shadow-sm sm:text-sm border-black rounded-md border-2 p-1">
+            </div>
+            <div class="mb-4">
+                <label for={validate} class="block text-sm font-medium text-gray-700">Validate</label>
+                <input type="text" id={validate} name={validate} value="" class="mt-1 block w-full shadow-sm sm:text-sm border-black rounded-md border-2 p-1">
+            </div>
+        </div>
+    </div>
+    <div id={nextField}>
+        <button hx-get={nextRoute} hx-target={nextTarget} class="bg-blue-500 hover:bg-blue-700 px-4 py-2 text-base text-white focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm rounded-md border border-transparent shadow-sm">Add Column</button>
+        <button hx-get="#" hx-swap="delete" hx-target={currentTarget} class="bg-red-500 hover:bg-red-700 px-4 py-2 text-base text-white focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm rounded-md border border-transparent shadow-sm">Remove Column</button>
+    </div>
+}

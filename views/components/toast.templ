@@ -1,0 +1,19 @@
+package components
+
+templ Toast(message string, status string) {
+    if status == "error" {
+        <div class="mb-4 p-2 bg-red-200 text-red-800 rounded" hx-get="#" hx-trigger="load delay:1s" hx-swap="delete">
+            { message }
+        </div>
+    }
+    else if status == "success" {
+        <div class="mb-4 p-2 bg-green-200 text-green-800 rounded" hx-get="#" hx-trigger="load delay:1s" hx-swap="delete">
+            { message }
+        </div>
+    }
+    else {
+        <div class="mb-4 p-2 bg-blue-200 text-blue-800 rounded" hx-get="#" hx-trigger="load delay:1s" hx-swap="delete">
+            { message }
+        </div>
+    }
+}

@@ -1,0 +1,9 @@
+package hello
+
+import "github.com/MarcelArt/app_standard/views/layout"
+
+templ Show(name string) {
+    @layout.Main() {
+        <p>Hello, {name}</p>
+    }
+}
