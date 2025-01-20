@@ -3,7 +3,7 @@ package cmd
 import (
 	"os"
 
-	"github.com/MarcelArt/app_standard/database"
+	"github.com/MarcelArt/ModelCraft/database"
 )
 
 func Migrate(arg string) {

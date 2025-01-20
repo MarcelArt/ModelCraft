@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/MarcelArt/app_standard/config"
-	"github.com/MarcelArt/app_standard/models"
+	"github.com/MarcelArt/ModelCraft/config"
+	"github.com/MarcelArt/ModelCraft/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

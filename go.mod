@@ -1,4 +1,4 @@
-module github.com/MarcelArt/app_standard
+module github.com/MarcelArt/ModelCraft
 
 go 1.23
 

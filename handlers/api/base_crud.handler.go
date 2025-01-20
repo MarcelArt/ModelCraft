@@ -1,9 +1,9 @@
 package api_handlers
 
 import (
-	"github.com/MarcelArt/app_standard/models"
-	"github.com/MarcelArt/app_standard/repositories"
-	"github.com/MarcelArt/app_standard/utils"
+	"github.com/MarcelArt/ModelCraft/models"
+	"github.com/MarcelArt/ModelCraft/repositories"
+	"github.com/MarcelArt/ModelCraft/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )

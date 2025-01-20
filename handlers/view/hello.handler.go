@@ -1,8 +1,8 @@
 package view_handlers
 
 import (
-	"github.com/MarcelArt/app_standard/utils"
-	"github.com/MarcelArt/app_standard/views/hello"
+	"github.com/MarcelArt/ModelCraft/utils"
+	"github.com/MarcelArt/ModelCraft/views/hello"
 	"github.com/gofiber/fiber/v2"
 )
 

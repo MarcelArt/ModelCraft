@@ -1,10 +1,10 @@
 package api_routes
 
 import (
-	"github.com/MarcelArt/app_standard/database"
-	api_handlers "github.com/MarcelArt/app_standard/handlers/api"
-	"github.com/MarcelArt/app_standard/middlewares"
-	"github.com/MarcelArt/app_standard/repositories"
+	"github.com/MarcelArt/ModelCraft/database"
+	api_handlers "github.com/MarcelArt/ModelCraft/handlers/api"
+	"github.com/MarcelArt/ModelCraft/middlewares"
+	"github.com/MarcelArt/ModelCraft/repositories"
 	"github.com/gofiber/fiber/v2"
 )
 

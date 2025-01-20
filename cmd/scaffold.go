@@ -3,7 +3,7 @@ package cmd
 import (
 	"log"
 
-	"github.com/MarcelArt/app_standard/scaffold"
+	"github.com/MarcelArt/ModelCraft/scaffold"
 )
 
 func Scaffolder(modelName string) {

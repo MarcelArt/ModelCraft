@@ -5,7 +5,7 @@ import (
 	"unicode"
 )
 
-const moduleName = "github.com/MarcelArt/app_standard"
+const moduleName = "github.com/MarcelArt/ModelCraft"
 
 // ToCamelCase converts a TitleCase string into titleCase
 func ToCamelCase(input string) string {

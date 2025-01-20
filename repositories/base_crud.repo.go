@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"github.com/MarcelArt/app_standard/models"
+	"github.com/MarcelArt/ModelCraft/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/morkid/paginate"
 	"gorm.io/gorm"

@@ -3,8 +3,8 @@ package middlewares
 import (
 	"strings"
 
-	"github.com/MarcelArt/app_standard/repositories"
-	"github.com/MarcelArt/app_standard/utils"
+	"github.com/MarcelArt/ModelCraft/repositories"
+	"github.com/MarcelArt/ModelCraft/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
