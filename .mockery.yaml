@@ -1,0 +1,12 @@
+with-expecter: True
+dir: mocks/{{ replaceAll .InterfaceDirRelative "internal" "internal_" }} 
+mockname: "{{.InterfaceName}}"
+outpkg: "{{.PackageName}}"
+filename: "{{.InterfaceName}}.go"
+all: True
+resolve-type-alias: False
+issue-845-fix: True
+packages:
+  github.com/MarcelArt/ModelCraft:
+    config:
+      recursive: True
