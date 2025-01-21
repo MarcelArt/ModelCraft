@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/gofiber/fiber/v2"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -14,6 +15,10 @@ func StatusCodeByError(err error) int {
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return fiber.StatusNotFound
+
+	}
+	if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+		return fiber.StatusUnauthorized
 
 	}
 

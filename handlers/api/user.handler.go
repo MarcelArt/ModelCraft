@@ -46,26 +46,26 @@ func NewUserHandler(repo repositories.IUserRepo, adRepo repositories.IAuthorized
 func (h *UserHandler) Create(c *fiber.Ctx) error {
 	var user models.UserDTO
 	if err := c.BodyParser(&user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	if err := h.BaseCrudHandler.validator.Struct(user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	user.Salt = utils.RandString(10)
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password+user.Salt), bcrypt.DefaultCost)
 	if err != nil {
-		return c.Status(utils.StatusCodeByError(err)).JSON(err.Error())
+		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
 	}
 	user.Password = string(hashedPassword)
 
 	id, err := h.repo.Create(user)
 	if err != nil {
-		return c.Status(utils.StatusCodeByError(err)).JSON(err.Error())
+		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"ID": id})
+	return c.Status(fiber.StatusCreated).JSON(models.NewJSONResponse(fiber.Map{"ID": id}, "User registered successfully"))
 }
 
 // Read retrieves a list of users
@@ -102,7 +102,7 @@ func (h *UserHandler) Update(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var user models.UserDTO
 	if err := c.BodyParser(&user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	// if err := h.BaseCrudHandler.validator.Struct(user); err != nil {
@@ -113,16 +113,16 @@ func (h *UserHandler) Update(c *fiber.Ctx) error {
 		user.Salt = utils.RandString(10)
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password+user.Salt), bcrypt.DefaultCost)
 		if err != nil {
-			return c.Status(utils.StatusCodeByError(err)).JSON(err.Error())
+			return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
 		}
 		user.Password = string(hashedPassword)
 	}
 
 	if err := h.repo.Update(id, &user); err != nil {
-		return c.Status(utils.StatusCodeByError(err)).JSON(err.Error())
+		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
 	}
 
-	return c.Status(fiber.StatusOK).JSON(user)
+	return c.Status(fiber.StatusOK).JSON(models.NewJSONResponse(user, "User updated successfully"))
 }
 
 // Delete deletes an existing user
@@ -170,26 +170,26 @@ func (h *UserHandler) GetByID(c *fiber.Ctx) error {
 func (h *UserHandler) Login(c *fiber.Ctx) error {
 	var user models.LoginInput
 	if err := c.BodyParser(&user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	if err := h.BaseCrudHandler.validator.Struct(user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	userDB, err := h.repo.GetByUsernameOrEmail(user.Username)
 	if err != nil {
-		return c.Status(utils.StatusCodeByError(err)).JSON(err.Error())
+		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, "Username or password is incorrect"))
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(userDB.Password), []byte(user.Password+userDB.Salt))
 	if err != nil {
-		return c.Status(utils.StatusCodeByError(err)).JSON(err.Error())
+		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, "Username or password is incorrect"))
 	}
 
 	accessToken, refreshToken, err := utils.GenerateTokenPair(userDB, user.IsRemember)
 	if err != nil {
-		return c.Status(utils.StatusCodeByError(err)).JSON(err.Error())
+		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	_, err = h.adRepo.Create(models.AuthorizedDeviceDTO{
@@ -199,13 +199,13 @@ func (h *UserHandler) Login(c *fiber.Ctx) error {
 		UserID:       userDB.ID,
 	})
 	if err != nil {
-		c.Status(utils.StatusCodeByError(err)).JSON(err.Error())
+		c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
 	}
 
-	return c.Status(fiber.StatusOK).JSON(models.LoginResponse{
+	return c.Status(fiber.StatusOK).JSON(models.NewJSONResponse(models.LoginResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
-	})
+	}, "Login successfully"))
 }
 
 // Refresh is a function to refresh expired access token
@@ -223,16 +223,16 @@ func (h *UserHandler) Login(c *fiber.Ctx) error {
 func (h *UserHandler) Refresh(c *fiber.Ctx) error {
 	var input models.RefreshInput
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	if err := h.BaseCrudHandler.validator.Struct(input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	claims, err := utils.ParseToken(input.RefreshToken)
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(err.Error())
+		return c.Status(fiber.StatusUnauthorized).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	isRemember := claims["isRemember"].(bool)
@@ -241,7 +241,7 @@ func (h *UserHandler) Refresh(c *fiber.Ctx) error {
 	device, err := h.adRepo.GetByRefreshToken(input.RefreshToken)
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+			return c.Status(fiber.StatusInternalServerError).JSON(models.NewJSONResponse(err, ""))
 		}
 		userID = utils.ClaimsNumberToString(claims["userId"])
 	}
@@ -252,7 +252,7 @@ func (h *UserHandler) Refresh(c *fiber.Ctx) error {
 
 	user, err := h.repo.GetByID(userID)
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(err.Error())
+		return c.Status(fiber.StatusUnauthorized).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	accessToken, refreshToken, err := utils.GenerateTokenPair(
@@ -266,7 +266,7 @@ func (h *UserHandler) Refresh(c *fiber.Ctx) error {
 		isRemember,
 	)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	device.UpdatedAt = time.Now()
@@ -277,16 +277,16 @@ func (h *UserHandler) Refresh(c *fiber.Ctx) error {
 	if device.ID == 0 {
 		_, err := h.adRepo.Create(device)
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+			return c.Status(fiber.StatusInternalServerError).JSON(models.NewJSONResponse(err, ""))
 		}
 	} else {
 		if err := h.adRepo.Update(strconv.Itoa(int(device.ID)), &device); err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+			return c.Status(fiber.StatusInternalServerError).JSON(models.NewJSONResponse(err, ""))
 		}
 	}
 
-	return c.Status(fiber.StatusOK).JSON(models.LoginResponse{
+	return c.Status(fiber.StatusOK).JSON(models.NewJSONResponse(models.LoginResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
-	})
+	}, "Tokens refreshed successfully"))
 }

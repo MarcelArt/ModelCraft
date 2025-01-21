@@ -17,19 +17,19 @@ func (h *BaseCrudHandler[TModel, TDto, TPage]) Create(c *fiber.Ctx) error {
 	var dto TDto
 
 	if err := c.BodyParser(&dto); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	if err := h.validator.Struct(dto); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	id, err := h.repo.Create(dto)
 	if err != nil {
-		return c.Status(utils.StatusCodeByError(err)).JSON(err.Error())
+		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"ID": id})
+	return c.Status(fiber.StatusCreated).JSON(models.NewJSONResponse(fiber.Map{"ID": id}, "Created successfully"))
 }
 
 // Read retrieves a list of resources
@@ -59,15 +59,15 @@ func (h *BaseCrudHandler[TModel, TDto, TPage]) Update(c *fiber.Ctx) error {
 	var dto TDto
 
 	if err := c.BodyParser(&dto); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	if err := h.validator.Struct(dto); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	if err := h.repo.Update(id, &dto); err != nil {
-		return c.Status(utils.StatusCodeByError(err)).JSON(err.Error())
+		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	return c.Status(fiber.StatusOK).JSON(dto)
@@ -79,10 +79,10 @@ func (h *BaseCrudHandler[TModel, TDto, TPage]) Delete(c *fiber.Ctx) error {
 	model, err := h.repo.Delete(id)
 
 	if err != nil {
-		return c.Status(utils.StatusCodeByError(err)).JSON(err.Error())
+		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
 	}
 
-	return c.Status(fiber.StatusOK).JSON(model)
+	return c.Status(fiber.StatusOK).JSON(models.NewJSONResponse(model, "Deleted successfully"))
 }
 
 func (h *BaseCrudHandler[TModel, TDto, TPage]) GetByID(c *fiber.Ctx) error {
@@ -91,8 +91,8 @@ func (h *BaseCrudHandler[TModel, TDto, TPage]) GetByID(c *fiber.Ctx) error {
 	model, err := h.repo.GetByID(id)
 
 	if err != nil {
-		return c.Status(utils.StatusCodeByError(err)).JSON(err.Error())
+		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
 	}
 
-	return c.Status(fiber.StatusOK).JSON(model)
+	return c.Status(fiber.StatusOK).JSON(models.NewJSONResponse(model, "Data retrieved successfully"))
 }
