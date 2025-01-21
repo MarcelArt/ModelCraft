@@ -24,5 +24,5 @@ Modify it to your actual generated setup route function
 6. Then you can migrate or drop db using `make migrate-up` and `make migrate-down`
 
 ## Automatic CRUD Scaffolding using UI
-1. Enter the url in the browser http://localhost:<PORT>/dev-tools
+1. Enter the url in the browser http://localhost:`<PORT>`/dev-tools
 2. You can also do scaffolding and migration there
