@@ -5,7 +5,9 @@ go 1.23
 toolchain go1.23.4
 
 require (
+	github.com/a-h/templ v0.3.819
 	github.com/gofiber/swagger v1.1.0
+	github.com/stretchr/testify v1.10.0
 	github.com/swaggo/swag v1.16.4
 	golang.org/x/crypto v0.32.0
 	gorm.io/gorm v1.25.12
@@ -13,8 +15,8 @@ require (
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
-	github.com/a-h/templ v0.3.819 // indirect
 	github.com/andybalholm/brotli v1.1.1 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
@@ -37,8 +39,10 @@ require (
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/morkid/gocache v1.0.0 // indirect
 	github.com/philhofer/fwd v1.1.3-0.20240916144458-20a13a1f6b7c // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.13.1 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/swaggo/files/v2 v2.0.1 // indirect
 	github.com/tinylib/msgp v1.2.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect

@@ -3,6 +3,7 @@ package middlewares
 import (
 	"strings"
 
+	"github.com/MarcelArt/ModelCraft/models"
 	"github.com/MarcelArt/ModelCraft/repositories"
 	"github.com/MarcelArt/ModelCraft/utils"
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +24,7 @@ func (m *AuthMiddleware) ProtectedAPI(c *fiber.Ctx) error {
 	idToken := strings.TrimSpace(strings.Replace(token, "Bearer", "", 1))
 	claims, err := utils.ParseToken(idToken)
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(err.Error())
+		return c.Status(fiber.StatusUnauthorized).JSON(models.NewJSONResponse(err, ""))
 	}
 
 	c.Locals("userId", claims["userId"])
