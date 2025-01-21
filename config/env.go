@@ -20,7 +20,7 @@ type env struct {
 
 var Env *env
 
-func init() {
+func SetupENV() {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Panic(err.Error())

@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/MarcelArt/ModelCraft/cmd"
-	_ "github.com/MarcelArt/ModelCraft/config"
 	_ "github.com/MarcelArt/ModelCraft/docs"
 )
 

@@ -11,6 +11,7 @@ import (
 )
 
 func Serve() {
+	config.SetupENV()
 	database.ConnectDB()
 
 	app := fiber.New()
