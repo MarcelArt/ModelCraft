@@ -1,0 +1,32 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Test Go
+
+on:
+  pull_request:
+    branches: [ "dev" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.23'
+
+    - name: Go swaggo/swag tool
+      uses: yahorry/go-swag-action@v0.1
+      with:
+        swagWersion: v1.16.4
+        command: init --parseInternal --parseDependency
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: Test
+      run: go test ./tests/unit_test -v
