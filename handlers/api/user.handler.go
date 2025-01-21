@@ -66,7 +66,7 @@ func (h *UserHandler) Create(c *fiber.Ctx) error {
 	}
 
 	// TODO: Send email verification
-	return c.Status(fiber.StatusCreated).JSON(models.NewJSONResponse(fiber.Map{"ID": id}, "User registered successfully"))
+	return c.Status(fiber.StatusOK).JSON(models.NewJSONResponse(fiber.Map{"ID": id}, "User registered successfully"))
 }
 
 // Read retrieves a list of users
