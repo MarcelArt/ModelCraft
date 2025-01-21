@@ -22,7 +22,7 @@ jobs:
     - name: Go swaggo/swag tool
       uses: yahorry/go-swag-action@v0.1
       with:
-        swagWersion: v1.16.4
+        swagWersion: 1.16.4
         command: init --parseInternal --parseDependency
 
     - name: Build
