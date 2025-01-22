@@ -29,4 +29,4 @@ jobs:
       run: go build -v ./...
 
     - name: Test
-      run: go test ./tests/unit_test -v
+      run: go test ./tests/* -v 
