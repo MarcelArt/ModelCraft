@@ -35,7 +35,7 @@ func NewUserRepo(db *gorm.DB) *UserRepo {
 
 func (r *UserRepo) GetByUsernameOrEmail(username string) (models.UserDTO, error) {
 	var user models.UserDTO
-	err := r.db.Where("(username = ? OR password = ?) and verified_at is not null", username, username).First(&user).Error
+	err := r.db.Where("(username = ? OR email = ?) and verified_at is not null", username, username).First(&user).Error
 	return user, err
 }
 
