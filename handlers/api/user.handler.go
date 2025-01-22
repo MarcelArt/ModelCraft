@@ -3,6 +3,7 @@ package api_handlers
 import (
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -72,7 +73,7 @@ func (h *UserHandler) Create(c *fiber.Ctx) error {
 	err = h.mService.SendMail(services.Mailer{
 		To:      []string{user.Email},
 		Subject: "Email Verification",
-		Body:    fmt.Sprintf("Please verify your email by clicking this link: <a href='%s/verify/%d'>Verify</a>", c.BaseURL(), id),
+		Body:    fmt.Sprintf("Please verify your email by clicking this link: <a href='%s/api/user/verify/%d'>Verify</a>", c.BaseURL(), id),
 	})
 	if err != nil {
 		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
@@ -302,4 +303,15 @@ func (h *UserHandler) Refresh(c *fiber.Ctx) error {
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, "Tokens refreshed successfully"))
+}
+
+func (h *UserHandler) Verify(c *fiber.Ctx) error {
+	id := c.Params("id")
+	err := h.repo.Verify(id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.NewJSONResponse(err, ""))
+	}
+
+	log.Println("User verified")
+	return c.Redirect("/")
 }
