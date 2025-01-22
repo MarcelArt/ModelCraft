@@ -21,7 +21,7 @@ migrate-down:
 	@go run main.go migrate down
 
 test:
-	@go test ./tests/* -v 
+	@go test ./tests/... -v 
 
 mock:
 	@mockery
