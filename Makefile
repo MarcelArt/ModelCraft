@@ -20,8 +20,8 @@ migrate-up:
 migrate-down:
 	@go run main.go migrate down
 
-unit-test:
-	@go test ./tests/unit_test -v 
+test:
+	@go test ./tests/* -v 
 
 mock:
 	@mockery

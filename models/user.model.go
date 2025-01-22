@@ -1,16 +1,21 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 const userTableName = "users"
 
 type User struct {
 	gorm.Model
 	// Insert your fields here
-	Username string `json:"username" gorm:"unique;not null"`
-	Email    string `json:"email" gorm:"unique;not null" validate:"email"`
-	Password string `json:"-" gorm:"not null" validate:"min=8"`
-	Salt     string `json:"-" gorm:"not null"`
+	Username   string    `json:"username" gorm:"unique;not null"`
+	Email      string    `json:"email" gorm:"unique;not null" validate:"email"`
+	Password   string    `json:"-" gorm:"not null" validate:"min=8"`
+	Salt       string    `json:"-" gorm:"not null"`
+	VerifiedAt time.Time `json:"verifiedAt"`
 }
 
 type UserDTO struct {

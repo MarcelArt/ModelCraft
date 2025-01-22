@@ -2,11 +2,14 @@ package api_handlers
 
 import (
 	"errors"
+	"fmt"
+	"log"
 	"strconv"
 	"time"
 
 	"github.com/MarcelArt/ModelCraft/models"
 	"github.com/MarcelArt/ModelCraft/repositories"
+	"github.com/MarcelArt/ModelCraft/services"
 	"github.com/MarcelArt/ModelCraft/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -16,18 +19,20 @@ import (
 
 type UserHandler struct {
 	BaseCrudHandler[models.User, models.UserDTO, models.UserPage]
-	repo   repositories.IUserRepo
-	adRepo repositories.IAuthorizedDeviceRepo
+	repo     repositories.IUserRepo
+	adRepo   repositories.IAuthorizedDeviceRepo
+	mService services.IMailService
 }
 
-func NewUserHandler(repo repositories.IUserRepo, adRepo repositories.IAuthorizedDeviceRepo) *UserHandler {
+func NewUserHandler(repo repositories.IUserRepo, adRepo repositories.IAuthorizedDeviceRepo, mService services.IMailService) *UserHandler {
 	return &UserHandler{
 		BaseCrudHandler: BaseCrudHandler[models.User, models.UserDTO, models.UserPage]{
 			repo:      repo,
 			validator: validator.New(validator.WithRequiredStructEnabled()),
 		},
-		repo:   repo,
-		adRepo: adRepo,
+		repo:     repo,
+		adRepo:   adRepo,
+		mService: mService,
 	}
 }
 
@@ -61,6 +66,15 @@ func (h *UserHandler) Create(c *fiber.Ctx) error {
 	user.Password = string(hashedPassword)
 
 	id, err := h.repo.Create(user)
+	if err != nil {
+		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
+	}
+
+	err = h.mService.SendMail(services.Mailer{
+		To:      []string{user.Email},
+		Subject: "Email Verification",
+		Body:    fmt.Sprintf("Please verify your email by clicking this link: <a href='%s/api/user/verify/%d'>Verify</a>", c.BaseURL(), id),
+	})
 	if err != nil {
 		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
 	}
@@ -289,4 +303,15 @@ func (h *UserHandler) Refresh(c *fiber.Ctx) error {
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, "Tokens refreshed successfully"))
+}
+
+func (h *UserHandler) Verify(c *fiber.Ctx) error {
+	id := c.Params("id")
+	err := h.repo.Verify(id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(models.NewJSONResponse(err, ""))
+	}
+
+	log.Println("User verified")
+	return c.Redirect("/")
 }
