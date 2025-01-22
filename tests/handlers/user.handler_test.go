@@ -1,4 +1,4 @@
-package unittest
+package handlers_test
 
 import (
 	"bytes"
@@ -39,6 +39,10 @@ func TestCreateUser(t *testing.T) {
 		userRepoMock.On("Create", mock.Anything).
 			Once().
 			Return(uint(1), nil)
+
+		mailServiceMock.On("SendMail", mock.Anything).
+			Once().
+			Return(nil)
 
 		req := httptest.NewRequest("POST", "/api/user", bytes.NewReader(body))
 		req.Header.Set("Content-Type", "application/json")
