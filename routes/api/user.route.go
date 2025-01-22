@@ -5,6 +5,7 @@ import (
 	api_handlers "github.com/MarcelArt/ModelCraft/handlers/api"
 	"github.com/MarcelArt/ModelCraft/middlewares"
 	"github.com/MarcelArt/ModelCraft/repositories"
+	"github.com/MarcelArt/ModelCraft/services"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -12,6 +13,7 @@ func SetupUserRoutes(api fiber.Router, auth *middlewares.AuthMiddleware) {
 	h := api_handlers.NewUserHandler(
 		repositories.NewUserRepo(database.GetDB()),
 		repositories.NewAuthorizedDeviceRepo(database.GetDB()),
+		services.NewMailService(),
 	)
 
 	g := api.Group("/user")

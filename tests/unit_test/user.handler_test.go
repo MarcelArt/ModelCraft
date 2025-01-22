@@ -8,6 +8,7 @@ import (
 
 	api_handlers "github.com/MarcelArt/ModelCraft/handlers/api"
 	"github.com/MarcelArt/ModelCraft/mocks/repositories"
+	"github.com/MarcelArt/ModelCraft/mocks/services"
 	"github.com/MarcelArt/ModelCraft/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
@@ -19,8 +20,9 @@ func TestCreateUser(t *testing.T) {
 
 	userRepoMock := new(repositories.IUserRepo)
 	authDeviceRepoMock := new(repositories.IAuthorizedDeviceRepo)
+	mailServiceMock := new(services.IMailService)
 
-	userHandler := api_handlers.NewUserHandler(userRepoMock, authDeviceRepoMock)
+	userHandler := api_handlers.NewUserHandler(userRepoMock, authDeviceRepoMock, mailServiceMock)
 
 	app.Post("api/user", userHandler.Create)
 

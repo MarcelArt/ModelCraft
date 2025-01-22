@@ -2,11 +2,13 @@ package api_handlers
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
 	"github.com/MarcelArt/ModelCraft/models"
 	"github.com/MarcelArt/ModelCraft/repositories"
+	"github.com/MarcelArt/ModelCraft/services"
 	"github.com/MarcelArt/ModelCraft/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -16,18 +18,20 @@ import (
 
 type UserHandler struct {
 	BaseCrudHandler[models.User, models.UserDTO, models.UserPage]
-	repo   repositories.IUserRepo
-	adRepo repositories.IAuthorizedDeviceRepo
+	repo     repositories.IUserRepo
+	adRepo   repositories.IAuthorizedDeviceRepo
+	mService services.IMailService
 }
 
-func NewUserHandler(repo repositories.IUserRepo, adRepo repositories.IAuthorizedDeviceRepo) *UserHandler {
+func NewUserHandler(repo repositories.IUserRepo, adRepo repositories.IAuthorizedDeviceRepo, mService services.IMailService) *UserHandler {
 	return &UserHandler{
 		BaseCrudHandler: BaseCrudHandler[models.User, models.UserDTO, models.UserPage]{
 			repo:      repo,
 			validator: validator.New(validator.WithRequiredStructEnabled()),
 		},
-		repo:   repo,
-		adRepo: adRepo,
+		repo:     repo,
+		adRepo:   adRepo,
+		mService: mService,
 	}
 }
 
@@ -65,7 +69,15 @@ func (h *UserHandler) Create(c *fiber.Ctx) error {
 		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
 	}
 
-	// TODO: Send email verification
+	err = h.mService.SendMail(services.Mailer{
+		To:      []string{user.Email},
+		Subject: "Email Verification",
+		Body:    fmt.Sprintf("Please verify your email by clicking this link: <a href='%s/verify/%d'>Verify</a>", c.BaseURL(), id),
+	})
+	if err != nil {
+		return c.Status(utils.StatusCodeByError(err)).JSON(models.NewJSONResponse(err, ""))
+	}
+
 	return c.Status(fiber.StatusCreated).JSON(models.NewJSONResponse(fiber.Map{"ID": id}, "User registered successfully"))
 }
 
