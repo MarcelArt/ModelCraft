@@ -7,6 +7,7 @@ templ Index(tables []string) {
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4" hx-target="#create-modal" hx-get="/dev-tools/create">Create New</button>
         <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4" hx-target="#toast" hx-post="/dev-tools/migrate">Migrate Models</button>
         <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-4" hx-target="#toast" hx-post="/dev-tools/drop">Drop All</button>
+        <a href="/swagger/index.html" class="bg-neutral-900 hover:text-emerald-300 hover:bg-neutral-800 text-emerald-400 font-bold py-2 px-4 rounded mb-4">Swagger Docs</a>
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
             <tr>
