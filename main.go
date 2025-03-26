@@ -28,43 +28,4 @@ func main() {
 	} else {
 		cmd.Serve()
 	}
-
 }
-
-// func serve() {
-// 	database.ConnectDB()
-
-// 	app := fiber.New()
-
-// 	routes.SetupRoutes(app)
-
-// 	log.Printf("Listening to http://localhost:%s", config.Env.PORT)
-// 	log.Fatal(app.Listen(fmt.Sprintf(":%s", config.Env.PORT)))
-// }
-
-// func cmdManager(args []string) {
-// 	argsLength := len(args)
-// 	fn := args[1]
-// 	switch fn {
-// 	case "scaffold":
-// 		if argsLength < 3 {
-// 			fmt.Println("Please input model name")
-// 			os.Exit(0)
-// 		}
-// 		scaffolder(args[2])
-// 	default:
-// 		fmt.Println("Unknown command")
-// 		os.Exit(0)
-// 	}
-// }
-
-// func scaffolder(modelName string) {
-// 	modelCamel := scaffold.ToCamelCase(modelName)
-// 	modelSnake := scaffold.ToSeparateByCharLowered(modelCamel, '_')
-// 	handlerRoute := scaffold.ToSeparateByCharLowered(modelName, '-')
-// 	scaffold.ScaffoldModel(modelName, modelCamel, modelSnake)
-// 	scaffold.ScaffoldRepo(modelName, modelCamel)
-// 	scaffold.ScaffoldHandler(modelName, handlerRoute)
-// 	scaffold.ScaffoldRoute(modelName, handlerRoute)
-// 	log.Println("Successfully scaffolded")
-// }
