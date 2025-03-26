@@ -261,7 +261,7 @@ func (h *UserHandler) Refresh(c *fiber.Ctx) error {
 	}
 
 	if userID == "" {
-		userID = strconv.Itoa(int(device.ID))
+		userID = strconv.Itoa(int(device.UserID))
 	}
 
 	user, err := h.repo.GetByID(userID)

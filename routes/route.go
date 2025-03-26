@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"log"
+	"os"
 	"time"
 
 	"github.com/MarcelArt/ModelCraft/config"
@@ -20,7 +22,23 @@ import (
 
 func SetupRoutes(app *fiber.App) {
 	app.Use(cors.New())
-	app.Use(logger.New())
+
+	file, err := os.OpenFile("./model-craft.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	app.Use(logger.New(logger.Config{
+		Output:     file,
+		Format:     "[${time}] ${status} - ${method} ${path} - Query: ${queryParams} - Request: ${body} - Response: ${resBody}\n",
+		TimeFormat: "2006-01-02 15:04:05",
+		TimeZone:   "Local",
+	}))
+	app.Use(logger.New(logger.Config{
+		Format:     "[${time}] ${status} - ${method} ${path} - Query: ${queryParams} - Request: ${body} - Response: ${resBody}\n",
+		TimeFormat: "2006-01-02 15:04:05",
+		TimeZone:   "Local",
+	}))
+
 	app.Use(limiter.New(limiter.Config{
 		Max:        20,
 		Expiration: 30 * time.Second,
