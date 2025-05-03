@@ -3,6 +3,8 @@ package models
 import (
 	"time"
 
+	"github.com/MarcelArt/ModelCraft/enums"
+	"github.com/golang-jwt/jwt/v5"
 	"gorm.io/gorm"
 )
 
@@ -50,4 +52,24 @@ type RefreshInput struct {
 
 func (UserDTO) TableName() string {
 	return userTableName
+}
+
+func (m UserDTO) AccessClaims(exp int64) jwt.MapClaims {
+	return jwt.MapClaims{
+		"username": m.Username,
+		"userId":   m.ID,
+		"exp":      exp,
+	}
+}
+
+func (m UserDTO) RefreshClaims(isRemember bool) jwt.MapClaims {
+	expireAt := time.Now().Add(enums.Day)
+	if isRemember {
+		expireAt = time.Now().Add(enums.Month)
+	}
+	return jwt.MapClaims{
+		"userId":     m.ID,
+		"isRemember": isRemember,
+		"exp":        expireAt.Unix(),
+	}
 }

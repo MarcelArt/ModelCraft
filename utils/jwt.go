@@ -5,12 +5,15 @@ import (
 	"time"
 
 	"github.com/MarcelArt/ModelCraft/config"
-	"github.com/MarcelArt/ModelCraft/enums"
-	"github.com/MarcelArt/ModelCraft/models"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func GenerateTokenPair(user models.UserDTO, isRemember bool) (string, string, error) {
+type ILoginable interface {
+	AccessClaims(exp int64) jwt.MapClaims
+	RefreshClaims(isRememeber bool) jwt.MapClaims
+}
+
+func GenerateTokenPair(user ILoginable, isRemember bool) (string, string, error) {
 	accessToken, err := generateAccessToken(user)
 	if err != nil {
 		return "", "", err
@@ -24,12 +27,8 @@ func GenerateTokenPair(user models.UserDTO, isRemember bool) (string, string, er
 	return accessToken, refreshToken, nil
 }
 
-func generateAccessToken(user models.UserDTO) (string, error) {
-	claims := jwt.MapClaims{
-		"username": user.Username,
-		"userId":   user.ID,
-		"exp":      time.Now().Add(time.Minute * 5).Unix(),
-	}
+func generateAccessToken(user ILoginable) (string, error) {
+	claims := user.AccessClaims(time.Now().Add(time.Minute * 5).Unix())
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = claims
@@ -38,17 +37,8 @@ func generateAccessToken(user models.UserDTO) (string, error) {
 	return t, err
 }
 
-func generateRefreshToken(user models.UserDTO, isRemember bool) (string, error) {
-	expireAt := time.Now().Add(enums.Day)
-	if isRemember {
-		expireAt = time.Now().Add(enums.Month)
-	}
-
-	claims := jwt.MapClaims{
-		"userId":     user.ID,
-		"isRemember": isRemember,
-		"exp":        expireAt.Unix(),
-	}
+func generateRefreshToken(user ILoginable, isRemember bool) (string, error) {
+	claims := user.RefreshClaims(isRemember)
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = claims
